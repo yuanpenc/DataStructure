@@ -1,6 +1,6 @@
 # DataStructure
 
-- [PracticeI](#PracticeI)
+- [Practice I](#PracticeI)
 	- [Part I](#PartI)
 	- [Part II](#PartII)
 	- [Part III](#PartIII)
