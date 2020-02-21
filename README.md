@@ -1,18 +1,19 @@
 # DataStructure
 
-- [Practice I](#Practice I)
-	- [Part I](#Part I)
+- [PracticeI](#PracticeI)
+	- [Part I](#PartI)
+	- [Part II](#PartII)
+	- [Part III](#PartIII)
 
 
 
 
-
-## Practice I
+## PracticeI
 This project has three objectives. First, the student will be introduced to the linked list data structure using Michael Main’s ObjectNode.java. Second, the student will use the linked list class created in Part 1 to implement Merkle-Hellman Knapsack cryptography. Third, the student will use the same linked list to build a Merkle Tree.
 
 For more details, please look at the homwwork1 file.
 
-## Part I
+### PartI
 First, it is code for the tree node.
 ```
 package edu.colorado.nodes;
@@ -804,3 +805,150 @@ public class MerkleTree {
 }
 
 ```
+### PartII
+In this part, we are going to program based on the SinglyLinkedList and BigInteger. By BigInteger, it is a class used for mathematical operation which involves very big integer calculations that are outside the limit of all available primitive data types.
+
+```
+package edu.colorado.nodes;
+
+import java.math.BigInteger;
+import java.util.Scanner;
+
+public class MerkleHellman {
+	private static SinglyLinkedList w;
+	private static SinglyLinkedList b;
+	private static BigInteger q;
+	private static BigInteger r;
+
+	//the code about binaryString is copied from 
+	//https://stackoverflow.com/questions/917163/convert-a-string-like-testing123-to-binary-in-java
+	public static String binaryString(String s) {
+	  byte[] bytes = s.getBytes();
+	  StringBuilder binary = new StringBuilder();
+	  for (byte b : bytes)
+	  {
+	     int val = b;
+	     for (int i = 0; i < 8; i++)
+	     {
+	        binary.append((val & 128) == 0 ? 0 : 1);
+	        val <<= 1;
+	     }
+	  }
+	  System.out.println("'" + s + "' to binary: " + binary);
+	  return binary.toString();
+	}
+	
+	// pass in a string provided by users and return the decimal number calculated by keys and binary list of the string, 
+	// which is kept in Biginteger.
+	public static BigInteger encryption(String str) {
+		String binaryStr=binaryString(str);
+		BigInteger sum=new BigInteger("0");
+		for (int i=0;i<binaryStr.length();i++) {
+			BigInteger num=BigInteger.valueOf(Character.getNumericValue(binaryStr.charAt(i)));
+			
+			BigInteger bValue=(BigInteger)b.next();
+			sum=sum.add(num.multiply((bValue)));
+		}
+		
+		
+		return sum;
+		
+	}
+	
+	// using encryption result and algorithm mentioned on the pdf, we can decrypte the string
+	public static String decryption(BigInteger encryp,String str) {
+		BigInteger result;
+		int strBits=str.length()*8;
+		result= r.modInverse(q);
+		result=(encryp.multiply(result)).mod(q);
+		String decryBits="";
+		for (int i=w.countNodes-1;i>=0;i--) {
+			BigInteger tem=(BigInteger)w.getObjectAt(i);
+			//System.out.println(tem);
+			if (result.compareTo(tem)==-1) {
+				decryBits="0"+decryBits;
+			}else {
+				decryBits="1"+decryBits;
+				result=result.subtract(tem);
+			}
+		
+		}
+		decryBits=decryBits.substring(0,strBits);
+		//System.out.println(decryBits);
+		
+		
+		//convert binary code to texts.
+		String bits8;
+		String stringText="";
+		for (int index = 0;index < decryBits.length(); index = index + 8) {
+			bits8=decryBits.substring(index,index+8);
+			
+			stringText+= new Character((char) Integer.parseInt(bits8, 2)).toString();//this code below copy from https://github.com/RachelOuyang/Merkle-Hellman-
+			// /blob/master/src/merklehellman/Crypto.java
+		}
+		
+		System.out.println("decryption: "+stringText);
+		return stringText;
+	}
+
+	
+	public static void main(String[] args) {
+		//generate super-increasing list w.
+		w=new SinglyLinkedList();
+		BigInteger nodeNum=new BigInteger("1");
+		BigInteger sum=new BigInteger("1");
+		w.addAtEndNode(nodeNum);
+		int count=1;
+		
+		while(count<640) {
+			BigInteger nextNum;
+			BigInteger c= new BigInteger("1");
+			
+			nextNum=sum.add(c);
+			
+			
+			sum=sum.add(nextNum);
+			w.addAtEndNode(nextNum);
+			count++;
+		}
+		//generate the q which is a number that is greater than sum. Choose ten more.
+		q=sum.add(BigInteger.TEN);
+		//generate the r which is in range of [1,q) and is coprime to q.
+		r=q.subtract(BigInteger.ONE);
+		BigInteger gcd=q.gcd(r);
+		while (gcd.compareTo(BigInteger.ONE)!=0 && r.compareTo(BigInteger.ONE)>0) {
+			r=r.subtract(BigInteger.ONE);
+		}
+		
+		//generate public key b.
+		b=new SinglyLinkedList();
+		BigInteger bNum;
+		
+		while (w.hasNext()) {
+			bNum=(BigInteger)w.next();
+			bNum=(bNum.multiply(r)).mod(q);
+			b.addAtEndNode(bNum);
+		}
+		w.reset();
+		
+		Scanner in= new Scanner(System.in);
+		String str = in.nextLine();
+		//Stop program if str is longer than 80 characters. 
+		if (str.length()>80) {
+			System.out.println("Please enter string that is shorter than 80 letters");
+			return;
+		}
+			
+		
+		//Encryption
+		BigInteger encryptionResult=encryption(str);
+		System.out.println("encryption:"+encryptionResult);
+		
+		//Decryption 
+		String decrytionResult=decryption(encryptionResult,str);
+		
+	}
+}
+
+```
+
