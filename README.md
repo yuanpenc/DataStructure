@@ -671,140 +671,8 @@ public class SinglyLinkedList {
 }
 ```
 
-Last, code for MerkleTree. 
-Note: FOR TEST FILE, I used relative path. Therefore, if you want to test the code, you need to change the path according to the file location in you computer. 
 
-```
-package edu.colorado.nodes;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
-public class MerkleTree {
-	private static SinglyLinkedList list;
-	private static SinglyLinkedList line1;
-	private static SinglyLinkedList line2;
-	
-	public static void readFileByLines(String fileName) {
-        File file = new File(fileName);
-        BufferedReader reader = null;
-        try {
-     
-            reader = new BufferedReader(new FileReader(file));
-            String tempString = null;
-            int node = 0;
-            // read each line.
-            while ((tempString = reader.readLine()) != null) {
-                // store the data.
-                //System.out.println("line " + node + ": " + tempString);
-                line1.addAtEndNode(tempString);
-                node++;
-            }
-            if (node%2!=0) {
-            	String tem=(String)line1.getLast();
-            	line1.addAtEndNode(tem);
-            }
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e1) {
-                }
-            }
-        }
-    }
-	
-	public static String h(String text)  {
-		try {
-			MessageDigest digest = MessageDigest.getInstance("SHA-256");
-			byte[] hash =digest.digest(text.getBytes(StandardCharsets.UTF_8));
-			StringBuffer sb = new StringBuffer();
-			for (int i = 0; i <= 31; i++) {
-				byte b = hash[i];
-				sb.append(String.format("%02X", b));
-			}
-			return sb.toString();
-		    }
-		    catch (NoSuchAlgorithmException e) {
-		    	
-		        System.err.println("I'm sorry, but MD5 is not a valid message digest algorithm");
-		        return "error";
-		    }
-	}
-
-	public static void buildLine1() {
-		line1=new SinglyLinkedList();
-		//should change the path below, where I directly use a relative path.
-		readFileByLines("/Users/yuanpenc/Desktop/a4.txt");
-		//System.out.println(line1.countNodes);
-		//System.out.println((String)line1.getLast());
-		list.addAtEndNode(line1);
-		
-	}
-
-	
-	public static void buildLine2() {
-		line2=new SinglyLinkedList();
-		line1.reset(); 
-		while(line1.hasNext()) {
-			line2.addAtEndNode(h((String)line1.next()));
-			}
-		list.addAtEndNode(line2);
-		nextLine();
-		
-	}
-	
-	public static void nextLine() {
-		SinglyLinkedList nLine=new SinglyLinkedList();
-		SinglyLinkedList lastLine=(SinglyLinkedList)list.getLast();
-	
-		lastLine.reset(); 
-		int count=1;
-		String result="";
-		while(lastLine.hasNext()) {
-			result=result+(String)lastLine.next();
-			
-			if (count%2==0) {//even
-				//System.out.println(h(result));
-				nLine.addAtEndNode(h(result));
-				result="";
-			}
-			//line2.addAtEndNode(h((String)line1.next()));
-			count++;
-		}
-		list.addAtEndNode(nLine);
-	}
-	
-	
-	public static void main(String[] args) {
-		list=new SinglyLinkedList();
-		buildLine1();
-		buildLine2();
-		while(((SinglyLinkedList)list.getLast()).countNodes!=1) {
-			SinglyLinkedList lastLine;
-			lastLine=(SinglyLinkedList)list.getLast();
-			if (lastLine.countNodes%2!=0){//odd nodes
-				lastLine.addAtEndNode(lastLine.getLast());
-				
-			}
-			nextLine();
-			System.out.println("count="+lastLine.countNodes);
-		}
-		
-		System.out.println(list.getLast());
-	}
-
-}
-
-```
 ### PartII
 In this part, we are going to program based on the SinglyLinkedList and BigInteger. By BigInteger, it is a class used for mathematical operation which involves very big integer calculations that are outside the limit of all available primitive data types.
 
@@ -948,6 +816,141 @@ public class MerkleHellman {
 		String decrytionResult=decryption(encryptionResult,str);
 		
 	}
+}
+
+```
+### PartIII
+Last, code for MerkleTree. 
+Note: FOR TEST FILE, I used relative path. Therefore, if you want to test the code, you need to change the path according to the file location in you computer. 
+
+```
+package edu.colorado.nodes;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+public class MerkleTree {
+	private static SinglyLinkedList list;
+	private static SinglyLinkedList line1;
+	private static SinglyLinkedList line2;
+	
+	public static void readFileByLines(String fileName) {
+        File file = new File(fileName);
+        BufferedReader reader = null;
+        try {
+     
+            reader = new BufferedReader(new FileReader(file));
+            String tempString = null;
+            int node = 0;
+            // read each line.
+            while ((tempString = reader.readLine()) != null) {
+                // store the data.
+                //System.out.println("line " + node + ": " + tempString);
+                line1.addAtEndNode(tempString);
+                node++;
+            }
+            if (node%2!=0) {
+            	String tem=(String)line1.getLast();
+            	line1.addAtEndNode(tem);
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e1) {
+                }
+            }
+        }
+    }
+	
+	public static String h(String text)  {
+		try {
+			MessageDigest digest = MessageDigest.getInstance("SHA-256");
+			byte[] hash =digest.digest(text.getBytes(StandardCharsets.UTF_8));
+			StringBuffer sb = new StringBuffer();
+			for (int i = 0; i <= 31; i++) {
+				byte b = hash[i];
+				sb.append(String.format("%02X", b));
+			}
+			return sb.toString();
+		    }
+		    catch (NoSuchAlgorithmException e) {
+		    	
+		        System.err.println("I'm sorry, but MD5 is not a valid message digest algorithm");
+		        return "error";
+		    }
+	}
+
+	public static void buildLine1() {
+		line1=new SinglyLinkedList();
+		//should change the path below, where I directly use a relative path.
+		readFileByLines("/Users/yuanpenc/Desktop/a4.txt");
+		//System.out.println(line1.countNodes);
+		//System.out.println((String)line1.getLast());
+		list.addAtEndNode(line1);
+		
+	}
+
+	
+	public static void buildLine2() {
+		line2=new SinglyLinkedList();
+		line1.reset(); 
+		while(line1.hasNext()) {
+			line2.addAtEndNode(h((String)line1.next()));
+			}
+		list.addAtEndNode(line2);
+		nextLine();
+		
+	}
+	
+	public static void nextLine() {
+		SinglyLinkedList nLine=new SinglyLinkedList();
+		SinglyLinkedList lastLine=(SinglyLinkedList)list.getLast();
+	
+		lastLine.reset(); 
+		int count=1;
+		String result="";
+		while(lastLine.hasNext()) {
+			result=result+(String)lastLine.next();
+			
+			if (count%2==0) {//even
+				//System.out.println(h(result));
+				nLine.addAtEndNode(h(result));
+				result="";
+			}
+			//line2.addAtEndNode(h((String)line1.next()));
+			count++;
+		}
+		list.addAtEndNode(nLine);
+	}
+	
+	
+	public static void main(String[] args) {
+		list=new SinglyLinkedList();
+		buildLine1();
+		buildLine2();
+		while(((SinglyLinkedList)list.getLast()).countNodes!=1) {
+			SinglyLinkedList lastLine;
+			lastLine=(SinglyLinkedList)list.getLast();
+			if (lastLine.countNodes%2!=0){//odd nodes
+				lastLine.addAtEndNode(lastLine.getLast());
+				
+			}
+			nextLine();
+			System.out.println("count="+lastLine.countNodes);
+		}
+		
+		System.out.println(list.getLast());
+	}
+
 }
 
 ```
