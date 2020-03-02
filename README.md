@@ -5,7 +5,7 @@
 	- [Building a LinkedList class](#PartI)
 	- [Merkle-Hellman Knapsack Cryptosystem](#PartII)
 	- [Merkle tree](#PartIII)
-- [Java](#part)
+- [Java](#Queues&RedBlackTrees)
 	
 
 
@@ -957,7 +957,7 @@ public class MerkleTree {
 
 ```
 
-## part
+## Queues&RedBlackTrees
 Write a spell checker that is based on a red black tree. The execution of the program, when run with shortWords.txt as a command line argument, will appear as follows:
 
 java RedBlackTreeSpellChecker shortwords.txt
