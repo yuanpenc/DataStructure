@@ -5,12 +5,11 @@
 	- [Building a LinkedList class](#PartI)
 	- [Merkle-Hellman Knapsack Cryptosystem](#PartII)
 	- [Merkle tree](#PartIII)
-- [Queues and Red Black Trees](#Queues&RedBlackTrees)
-	- [Queues and Red Black Trees](#基础)
-	- [Queues and Red Black Trees](#Queues&RedBlackTrees)
+- [Java](#part)
+	
 
 
-### 基础
+
 ## PracticeI
 This project has three objectives. First, the student will be introduced to the linked list data structure using Michael Main’s ObjectNode.java. Second, the student will use the linked list class created in Part 1 to implement Merkle-Hellman Knapsack cryptography. Third, the student will use the same linked list to build a Merkle Tree.
 
@@ -958,7 +957,7 @@ public class MerkleTree {
 
 ```
 
-## Queues&RedBlackTrees
+## part
 Write a spell checker that is based on a red black tree. The execution of the program, when run with shortWords.txt as a command line argument, will appear as follows:
 
 java RedBlackTreeSpellChecker shortwords.txt
