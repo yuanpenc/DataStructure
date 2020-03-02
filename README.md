@@ -1,10 +1,11 @@
 # DataStructure
 
 - [Practice I](#PracticeI)
-	- [Part I](#PartI)
-	- [Part II](#PartII)
-	- [Part III](#PartIII)
-
+	- [Building a LinkedList class](##PartI)
+	- [Merkle-Hellman Knapsack Cryptosystem](#PartII)
+	- [Merkle tree](#PartIII)
+- [Practice II](#PracticeII)
+	- [Queues and Red Black Trees](#Queues and Red Black Trees)
 
 
 
@@ -955,3 +956,736 @@ public class MerkleTree {
 
 ```
 
+# Queues and Red Black Trees
+Write a spell checker that is based on a red black tree. The execution of the program, when run with shortWords.txt as a command line argument, will appear as follows:
+
+java RedBlackTreeSpellChecker shortwords.txt
+Loading a tree of English words from shortwords.txt.
+Red Black Tree is loaded with 10 words.
+Initial tree height is 3.
+Never worse than 2 * Lg( n+1) = 6.918804721654216.
+
+Legal commands are: 
+d   display the entire word tree with a level order traversal.
+s    print the words of the tree in sorted order (using an inorder traversal).
+r    print the words of the tree in reverse sorted order (reverse inorder traversal). 
+c   <word> to spell check this word.
+a   <word> add this word to tree.
+f   <fileName> to check this text file for spelling errors.
+i   display the diameter of the tree.
+m  view this menu.
+!   to quit.
+Result example
+
+```
+c  aaa
+aaa Not in dictionary. Perhaps you mean
+aa
+>c aa
+Found aa after 3 comparisons
+>a mike
+mike was added to dictionary.
+>c mike
+Found mike after 4 comparisons
+>c mik
+mik Not in dictionary. Perhaps you mean
+mike
+>a mik
+mik was added to dictionary.
+>d
+Level order traversal
+[data = aal:Color = Black:Parent = -1: LC = a: RC = aam]
+[data = a:Color = Black:Parent = aal: LC = Aani: RC = aa]
+[data = aam:Color = Black:Parent = aal: LC = aalii: RC = aardwolf]
+[data = Aani:Color = Black:Parent = a: LC = A: RC = Aaron]
+[data = aa:Color = Black:Parent = a: LC = -1: RC = -1]
+[data = aalii:Color = Black:Parent = aam: LC = -1: RC = -1]
+[data = aardwolf:Color = Red:Parent = aam: LC = aardvark: RC = mike]
+[data = A:Color = Red:Parent = Aani: LC = -1: RC = -1]
+[data = Aaron:Color = Red:Parent = Aani: LC = -1: RC = -1]
+[data = aardvark:Color = Black:Parent = aardwolf: LC = -1: RC = -1]
+[data = mike:Color = Black:Parent = aardwolf: LC = mik: RC = -1]
+[data = mik:Color = Red:Parent = mike: LC = -1: RC = -1]
+>c aalii
+Found aalii after 3 comparisons
+>!
+Bye.
+```
+
+Code for this part:
+* Queen
+```
+import java.util.ArrayList;
+import java.util.List;
+
+public class Queue {
+
+	private int front;
+	private int rear;
+	private int size=10;
+	private Object[] data;
+
+	public Queue() {
+		front=0;
+		rear=0;
+		data=new Object[size];
+	}
+	
+	
+	// Pre-condition: queue not empty.
+	public Object deQueue() {
+		if (rear==0) {
+			return null;
+		}
+		Object[] newDataList=new Object[size];
+		Object frontData=data[front];
+		System.arraycopy(data, 1, newDataList, 0, size-1);
+		rear=rear-1;
+		data=newDataList;
+		return frontData;
+	}
+	
+	public void doubleList() {
+		int tempSize=size;
+		size=size*2;
+		Object[] newDataList=new Object[size];
+		System.arraycopy(data, 0, newDataList, 0, tempSize);
+		data=newDataList;
+		
+	}
+	
+    //Pre-condition Memory is available for doubling queue capacity when full. 
+	//Post-condition: queue now contains newData in the rear.
+	public void enQueue(Object newData) {
+		if (rear==size) {
+			doubleList();
+		}
+		data[rear]=newData;
+		rear=rear+1;
+	}
+	
+	
+	//Pre-condition: queue not empty.
+	public Object getFront() {
+		return data[front];
+		
+	}
+	
+	public boolean isEmpty() {
+		return rear==0;
+		
+	}
+	
+	public boolean isFull() {
+		return rear==size-1;
+	}
+	
+	public String toString() {
+		List<Object> list1=new ArrayList<>();
+		for (int i=0;i<size;i++) {
+			list1.add( data[i]);
+		}
+		String strResult=list1.toString();
+		return strResult;
+		
+	}
+	
+	public static void main(String[] args) {
+		/**
+		Queue newQueue;
+		newQueue=new Queue();
+		for (int i=0;i<20;i++) {
+			newQueue.enQueue(i);
+		}
+		//System.out.print(newQueue.size);
+		
+		//newQueue.enQueue(10);
+		newQueue.deQueue();
+		System.out.print(newQueue);
+		*/
+	}
+}
+```
+* RedBlackNode
+
+```
+
+public class RedBlackNode {
+	private RedBlackNode p;
+	private RedBlackNode lc;
+	private RedBlackNode rc;
+	private int color;
+	private String data;
+	
+	public RedBlackNode(String data, int color, RedBlackNode p, RedBlackNode lc, RedBlackNode rc){
+		this.data=data;
+		this.color=color;
+		this.p=p;
+		this.lc=lc;
+		this.rc=rc;
+	}
+	
+	public int getColor() {
+		return color;
+	}
+	
+	public String getData() {
+		return data;
+	}
+	
+	public RedBlackNode getLc() {
+		return lc;
+	}
+	
+	public RedBlackNode getP() {
+		return p;
+	}
+	
+	public RedBlackNode getRc() {
+		return rc;
+	}
+	
+	public void setColor(int color) {
+		this.color=color;
+	}
+	
+	public void setData(String data) {
+		this.data=data;
+	}
+	
+	public void setLc(RedBlackNode lc) {
+		this.lc=lc;
+	}
+	
+	public void setRc(RedBlackNode rc) {
+		this.rc=rc;
+	}
+	
+	public void setP(RedBlackNode p) {
+		this.p=p;
+	}
+	
+	public String toString() {
+		return data;
+	}
+}
+
+```
+
+* RedBlackTree
+
+```
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class RedBlackTree {
+	private RedBlackNode root;
+	private RedBlackNode sentinel;
+	private int size;
+	private List<String> listS=new ArrayList<>();
+	private int compareCount;
+	
+	public RedBlackTree() {
+		root=null;
+		sentinel=new RedBlackNode("-1",0,null,null,null);
+		
+	}
+	
+	
+	public RedBlackNode getRoot() {
+		return root;
+	}
+	
+	
+	//O(n)
+	//Ω(n)
+	//Θ(n)
+	public void readFileByLines(String fileName,RedBlackTree t) {
+		File file = new File(fileName);
+        BufferedReader reader = null;
+        try {
+     
+            reader = new BufferedReader(new FileReader(file));
+            String tempString = null;
+            int node = 0;
+            // read each line.
+            while ((tempString = reader.readLine()) != null) {
+                // store the data.
+                //System.out.println("line " + node + ": " + tempString);
+            	//t.listS.add(tempString);
+                t.insert(tempString);
+                node++;
+            }
+            t.size=node;
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e1) {
+                }
+            }
+        }
+	}
+	
+	//Pre-condition:memory is available for insertion.
+	//O(Log n)
+	//Ω(Log n)
+	//Θ(Log n)
+	public void insert(String value) {
+		listS.add(value);
+		RedBlackNode y=sentinel;
+		RedBlackNode x=root;
+		if (root!=null) {
+			while (x!=sentinel) {
+				y=x;
+				//System.out.println(value);
+				//System.out.println(1);
+				
+				if ((value.compareTo(x.getData()))<0) {
+					x=x.getLc();
+				}else {
+					x=x.getRc();
+				}
+			}
+		}
+		RedBlackNode newRbn=new RedBlackNode(value,1,null,null,null);
+		newRbn.setP(y);
+		if(y==sentinel) {
+			root=newRbn;
+		}else {
+			if ((value.compareTo(y.getData()))<0) {
+				y.setLc(newRbn);
+			}else {
+				y.setRc(newRbn);
+			}
+		}
+		newRbn.setLc(sentinel);
+		newRbn.setRc(sentinel);
+		newRbn.setColor(1);
+		//System.out.println("father:"+newRbn);
+		//System.out.println("fathercolor:"+newRbn.getP().getColor());
+		RBInsertFixup(newRbn);
+	}
+	
+	//pre: right[x] != nil[T].
+	//root's parent is nill[T].
+	//O(1)
+	//Ω(1)
+	//Θ(1)
+	public void leftRotate(RedBlackNode x) {
+		RedBlackNode y=x.getRc();
+		x.setRc(y.getLc());
+		y.getLc().setP(x);
+		y.setP(x.getP());
+		
+		if(x.getP()==sentinel) {
+			root=y;
+		}else {
+			if(x==x.getP().getLc()) {
+				x.getP().setLc(y);
+			}else {
+				x.getP().setRc(y);
+			}
+		}
+		y.setLc(x);
+		x.setP(y);
+	}
+	
+	//pre: left[x] != nil[T]
+	//pre: root's parent is nill[T]
+	//O(1)
+	//Ω(1)
+	//Θ(1)
+	public void rightRotate(RedBlackNode x) {
+		RedBlackNode y=x.getLc();
+		x.setLc(y.getRc());
+		y.getRc().setP(x);
+		y.setP(x.getP());
+		
+		if (x.getP()==sentinel) {
+			root=y;
+		}else {
+			if (x==x.getP().getLc()) {
+				x.getP().setLc(y);
+			}else {
+				x.getP().setRc(y);
+			}
+		}
+		y.setRc(x);
+		x.setP(y);
+	}
+	
+	//O(1)
+	//Ω(1)
+	//Θ(1)
+	public void RBInsertFixup(RedBlackNode z) {
+		while (z.getP().getColor()==1) {
+			//System.out.println(z.getP().getP());
+			if (z.getP()==z.getP().getP().getLc()) {
+				//System.out.println("hi");
+				RedBlackNode uncle=z.getP().getP().getRc();
+				if (uncle.getColor()==1) {
+					//uncle is red
+					z.getP().setColor(0);
+					uncle.setColor(0);
+					z.getP().getP().setColor(1);
+					z=z.getP().getP();
+				}else {
+					if (z==z.getP().getRc()) {
+						z=z.getP();
+						leftRotate(z);
+					}
+					z.getP().setColor(0);
+					z.getP().getP().setColor(1);
+					rightRotate(z.getP().getP());
+				}
+			}else {//rigit side
+				RedBlackNode uncle=z.getP().getP().getLc();
+				if (uncle.getColor()==1) {
+					z.getP().setColor(0);
+					uncle.setColor(0);
+					z.getP().getP().setColor(1);
+					z.getP().getP();
+				}else {
+					if(z==z.getP().getLc()) {
+						z=z.getP();
+						rightRotate(z);
+					}
+					z.getP().setColor(0);
+					z.getP().getP().setColor(1);
+					leftRotate(z.getP().getP());
+				}//end else
+			}//end else
+		}//end while
+		root.setColor(0);
+	}
+	
+	public void printData(RedBlackNode node) {
+		String result;
+		result="data = "+node.getData()+":Color = "+node.getColor()+":Parent = "+node.getP()+":LC = "+node.getLc()+":RC = "+node.getRc();
+		System.out.println(result);
+	}
+	
+
+	public void inOrderTraversal() {
+		inOrderTraversal(root);
+	}
+	
+	//O(n)
+	//Ω(n)
+	//Θ(n)
+	public void inOrderTraversal(RedBlackNode a) {
+		if (a==null) {
+			return;
+		}
+		inOrderTraversal(a.getLc());
+		printData(a);
+		inOrderTraversal(a.getRc());
+		
+		
+	}
+	
+	public int height() {
+		return height(root);
+	}
+	
+	//O(log n)
+	//Ω(log n)
+	//Θ(log n)
+	public int height(RedBlackNode t) {
+		if (t==null) {
+			return -1;
+		}
+		if (t.getData()==null) {
+			return -1;
+		}
+		else {
+			int lHeight=height(t.getLc());
+			int rHeight=height(t.getRc());
+	
+			if (lHeight>rHeight) {
+				return (lHeight+1);
+			}else {
+				return (rHeight+1);
+			}
+		}
+		
+	}
+	
+	
+	//O(n)
+	//Ω(n)
+	//Θ(n)
+	public void levelOrderTraversal() {
+		if(root==null) {
+			return;
+		}
+		Queue q=new Queue();
+		q.enQueue(root);
+		RedBlackNode node;
+		while(!q.isEmpty()) {
+			node=(RedBlackNode) q.deQueue();
+			printData(node);
+			if (node.getLc()!=sentinel) {
+				q.enQueue(node.getLc());
+			}
+			if (node.getRc()!=sentinel) {
+				q.enQueue(node.getRc());
+			}
+		}
+	}
+	
+	public void reverseOrderTraversal() {
+		reverseOrderTraversal(root);
+	}
+	
+	
+	//O(n)
+	//Ω(n)
+	//Θ(n)
+	public void reverseOrderTraversal(RedBlackNode t) {
+		if (t==null) {
+			return;
+		}
+		reverseOrderTraversal(t.getRc());
+		printData(t);
+		reverseOrderTraversal(t.getLc());
+	}
+	
+	public int getSize() {
+		return size;
+	}
+	
+	
+	//O(n)
+	//Ω(n)
+	//Θ(n)
+	public String closeBy(String v) {
+		int leastLength=0;
+		int mostLength=10000;
+		String mostString="";
+		String leastString="";
+		for (int j=0;j<listS.size();j++) {
+			String newString=listS.get(j);
+			if (v.startsWith(newString)) {
+				if (newString.length()>leastLength) {
+					leastString=newString;
+				}
+			}
+			if (newString.startsWith(v)) {
+				if (newString.length()<mostLength) {
+					mostString=newString;
+				}
+			}
+		}
+		if (Math.abs(v.length()-leastLength)<=Math.abs(v.length()-mostLength)) {
+			if(leastString.length()!=0) {
+				//System.out.println("leastString:"+leastString);
+				return leastString;
+			}
+		}
+		//System.out.println("mostString:"+mostString);
+		if (mostString.length()!=0) {
+			return mostString;
+		}
+		return "No matching String";
+	}
+	
+	//O(n)
+	//Ω(n)
+	//Θ(n)
+	public boolean contains(String v) {
+		int j;
+		for (j=0;j<listS.size();j++) {
+			String newString=listS.get(j);
+			if (v.compareTo(newString)==0) {
+				compareCount=j+1;
+				return true;
+			}
+		}
+		compareCount=j;
+		return false;
+	}
+	
+	public int getRecentCompares() {
+		return compareCount;
+	}
+	
+	
+	public static void main(String[] args) {
+		RedBlackTree rbt =new RedBlackTree();
+		//rbt.readFileByLines("/Users/yuanpenc/Desktop/shortwords.txt",rbt);
+		// after 1..5 are inserted
+		for(int j = 1; j <= 5; j++) rbt.insert(""+j);
+        System.out.println("RBT in order");
+        rbt.inOrderTraversal();
+        System.out.println("RBT level order");
+        rbt.levelOrderTraversal();
+        //rbt.insert("abc");
+        //rbt.insert("a");
+        
+       // is 3 in the tree
+        
+        if(rbt.contains(""+3)) System.out.println("Found 3");
+        else System.out.println("No 3 found"); 
+        
+        // display the height
+        System.out.println("The height is " + rbt.height());  
+        
+        //System.out.println(rbt.closeBy("ab"));
+        //System.out.println(rbt.root.getLc().getLc().getData());
+		
+		//rbt.insert("D");
+		//rbt.insert("B");
+		//rbt.insert("C");
+		//rbt.insert("H");
+		//rbt.insert("J");
+		//System.out.println(rbt.root.getRc());
+	}
+}
+```
+
+* RedBlackTreeTester
+```
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class RedBlackTreeTester {
+	
+	private static int diameter=0;
+	
+	//read the content in a new file for command f.
+	public static List<String> readFileByLines(String fileName) {
+		File file = new File(fileName);
+        BufferedReader reader = null;
+        List<String> ls=new ArrayList<>();
+        try {
+     
+            reader = new BufferedReader(new FileReader(file));
+            String tempString = null;
+     
+            // read each line.
+            while ((tempString = reader.readLine()) != null) {
+                // store the data.
+                //System.out.println("line " + node + ": " + tempString);
+            	//t.listS.add(tempString);
+                ls.add(tempString);
+                
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e1) {
+                }
+            }
+        }
+        return ls;
+	}
+	
+	public static int diameterOfBinaryTree(RedBlackNode root) {
+        diameter=0;
+        diameterHelper(root);
+        return diameter;
+	}
+	
+	public static int diameterHelper(RedBlackNode root) {
+		if (root == null) return 0;
+		int l = diameterHelper(root.getLc());
+        int r = diameterHelper(root.getRc());
+        if (l + r > diameter) diameter = l + r;
+        return Math.max(l, r) + 1;
+	}
+	
+	//pre-condition: the path need to change if user want to test different file or on different computer. 
+	public static void main(String[] args) {
+		RedBlackTree rbt =new RedBlackTree();
+		String path="/Users/yuanpenc/Desktop/shortwords.txt";
+		rbt.readFileByLines(path,rbt);
+		//System.out.println(command);
+		boolean quit=false;
+		while(true) {
+			Scanner input=new Scanner(System.in);
+			String command=input.nextLine();
+			switch(command) {
+			case "d":
+				System.out.println("RBT level order");
+		        rbt.levelOrderTraversal();
+				break;
+			case "s":
+				System.out.println("RBT in order");
+		        rbt.inOrderTraversal();
+				break;
+			case "r":
+				System.out.println("RBT in reserve order");
+		        rbt.reverseOrderTraversal();
+		        break;
+		        
+			case "c":
+				System.out.println("spell check this word");
+				Scanner wordInput=new Scanner(System.in);
+				String word=wordInput.nextLine();
+				if(rbt.contains(word)) {
+					int count=rbt.getRecentCompares();
+					System.out.println("found "+word+" after "+count+" comparisons ");
+				}else {
+					
+					System.out.println(word+" Not in dictionary. Perhaps you mean "+rbt.closeBy(word));
+				}
+		        break;    
+			case "a":
+				
+				Scanner wordInsert=new Scanner(System.in);
+				String wordIn=wordInsert.nextLine();
+				System.out.println(" was added to dictionary.");
+		        rbt.insert(wordIn);
+		        break;
+		    
+			case "f":
+				System.out.println("enter a path");
+				Scanner filePath=new Scanner(System.in);
+				String newFilePath=filePath.nextLine();
+				List<String> ls=readFileByLines(newFilePath);
+				for (int i=0;i<ls.size();i++) {
+					String findWord=ls.get(i);
+					if(rbt.contains(findWord)) {
+						int count=rbt.getRecentCompares();
+						System.out.println("found "+findWord+" after "+count+" comparisons ");
+					}else {
+						
+						System.out.println(findWord+" Not in dictionary. Perhaps you mean "+rbt.closeBy(findWord));
+					}
+				}
+				break;
+		        
+			case "i":
+				diameterOfBinaryTree(rbt.getRoot());
+				System.out.println("the diameter of the tree is "+diameter);
+				break;
+		        
+			case "!":
+				quit=true;
+			
+			}
+			if (quit) {
+				break;
+			}
+		}
+	}
+}
+```
