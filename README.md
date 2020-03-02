@@ -5,10 +5,10 @@
 	- [Merkle-Hellman Knapsack Cryptosystem](#PartII)
 	- [Merkle tree](#PartIII)
 - [Queues and RedBlackTrees](#QueuesRedBlackTrees)
-	- [Building a LinkedList class](#Queen)
-	- [Building a LinkedList class](#PartI)
-	- [Building a LinkedList class](#PartI)
-	
+	- [Queen](#Queen)
+	- [RedBlackNode](#RedBlackNode)
+	- [RedBlackTree](#RedBlackTree)
+	- [RedBlackTreeTester](#RedBlackTreeTester)
 
 
 
@@ -1175,7 +1175,7 @@ public class RedBlackNode {
 
 ```
 
-* RedBlackTree
+### RedBlackTree
 
 ```
 import java.io.BufferedReader;
@@ -1555,7 +1555,7 @@ public class RedBlackTree {
 }
 ```
 
-* RedBlackTreeTester
+### RedBlackTreeTester
 ```
 import java.io.BufferedReader;
 import java.io.File;
