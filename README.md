@@ -1,6 +1,6 @@
 # DataStructure
 
-- [Practice I](#PracticeI)
+- [Practice LinkedList](#PracticeI)
 	- [Building a LinkedList class](#PartI)
 	- [Merkle-Hellman Knapsack Cryptosystem](#PartII)
 	- [Merkle tree](#PartIII)
