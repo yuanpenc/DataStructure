@@ -1,11 +1,13 @@
 # DataStructure
 
 - [Practice I](#PracticeI)
-	- [基础](#基础)
 	- [Building a LinkedList class](#PartI)
 	- [Merkle-Hellman Knapsack Cryptosystem](#PartII)
 	- [Merkle tree](#PartIII)
-- [Java](#QueuesRedBlackTrees)
+- [Queues and RedBlackTrees](#QueuesRedBlackTrees)
+	- [Building a LinkedList class](#Queen)
+	- [Building a LinkedList class](#PartI)
+	- [Building a LinkedList class](#PartI)
 	
 
 
@@ -1014,7 +1016,7 @@ Bye.
 ```
 
 Code for this part:
-* Queen
+### Queen
 ```
 import java.util.ArrayList;
 import java.util.List;
@@ -1107,7 +1109,7 @@ public class Queue {
 	}
 }
 ```
-* RedBlackNode
+### RedBlackNode
 
 ```
 
