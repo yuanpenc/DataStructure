@@ -20,6 +20,7 @@ For more details, please look at the homework1 file.
 ### PartI
 First, it is code for the tree node.
 ```
+
 package edu.colorado.nodes;
 // File: ObjectNode.java from the package edu.colorado.nodes
 // Complete documentation is available from the ObjectNode link in:
